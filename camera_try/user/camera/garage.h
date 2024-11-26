@@ -15,7 +15,7 @@ enum garage_type_e {
 };
 extern enum garage_type_e garage_type;
 
-float calculate_vector_angle(float x1, float y1, float x2, float y2);\
+float calculate_vector_angle(float x1, float y1, float x2, float y2);
 void CheckGarage(void);
 void RunGarage(void);
 

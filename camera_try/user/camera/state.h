@@ -15,6 +15,7 @@ enum state_type_e {
     CIRCLE_STATE,
     CIRCLE_RUNNING_STATE,
     BARRIER_STATE,
+    LOST_STATE,
 };
 extern enum state_type_e last_state;
 extern enum state_type_e state_type;

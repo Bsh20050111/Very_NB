@@ -122,6 +122,9 @@ void ElementJudge(void)
                 CheckBarrier();
                 if (barrier_type == BARRIER_NONE) {
                     CheckCircle();
+                    if(circle_type==CIRCLE_NONE){
+                        CheckLost();
+                    }
                 }
             }
         }
@@ -131,13 +134,19 @@ void ElementJudge(void)
         cross_type   = CROSS_NONE;
         circle_type  = CIRCLE_NONE;
         barrier_type = BARRIER_NONE;
+        lost_type    = LOST_NONE;
     }
     if (cross_type != CROSS_NONE) {
         circle_type  = CIRCLE_NONE;
         barrier_type = BARRIER_NONE;
+        lost_type    = LOST_NONE;
     }
     if (barrier_type != BARRIER_NONE) {
         circle_type = CIRCLE_NONE;
+        lost_type   = LOST_NONE;
+    }
+    if(circle_type!=CIRCLE_NONE){
+        lost_type  = LOST_NONE;
     }
 }
 
@@ -314,6 +323,7 @@ void MidLineTrack(void){
     }
 
 
+    //以下为大模式切换和描点切换
     if (circle_type == CIRCLE_LEFT_IN || circle_type == CIRCLE_RIGHT_IN || circle_type == CIRCLE_LEFT_BEGIN || circle_type == CIRCLE_RIGHT_BEGIN) {
         state_type = CIRCLE_STATE;
         Atimer_clear(3);
@@ -395,5 +405,8 @@ void MidLineTrack(void){
         }
     }
 
+    if(lost_type == LOST_YES){
+        state_type = LOST_STATE;
+    }
 
 }

@@ -22,5 +22,6 @@
 #include "cross.h"
 #include "barrier.h"
 #include "Atime.h"
+#include "lost.h"
 
 #endif /* USER_CAMERA_HEADFILE_H_ */
