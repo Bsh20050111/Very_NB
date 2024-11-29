@@ -27,7 +27,7 @@ void CheckCross()
             if (cross_type == CROSS_NONE && Xfound && cross_easy == 0) {
                 cross_type = CROSS_BEGIN;
             }
-            if (cross_type == CROSS_NONE && cross_easy == 1 && (((Lpt0_found || Lpt1_found) && (pts_resample_left_count <= 3 || pts_resample_right_count <= 3)) || Xfound)) {
+            if (cross_type == CROSS_NONE && cross_easy == 1 && ((Lpt0_found || Lpt1_found) || Xfound)) {
                 cross_type = CROSS_BEGIN;
             }
         }
@@ -55,13 +55,15 @@ void RunCross()
         }
         // 远线控制进十字,begin_y渐变靠近防丢线
         if (cross_type == CROSS_IN) {
-            // 寻远线,算法与近线相同
+
             cross_farline();
 
             if (pts_resample_left_count < 5 && pts_resample_right_count < 5) {
                 Both_Boder_None_Cross++;
             }
-            if (Both_Boder_None_Cross > 2 && pts_resample_left_count > 20 && pts_resample_right_count > 20) {
+            else
+                Both_Boder_None_Cross=0;
+            if (Both_Boder_None_Cross > 2 && pts_resample_left_count > 8 && pts_resample_right_count > 8) {
                 cross_type            = CROSS_NONE;
                 Both_Boder_None_Cross = 0;
                 cross_easy            = 1;
@@ -101,7 +103,9 @@ void RunCross()
             if (pts_resample_left_count < 5 && pts_resample_right_count < 5) {
                 Both_Boder_None_Cross++;
             }
-            if (Both_Boder_None_Cross > 2 && pts_resample_left_count > 20 && pts_resample_right_count > 20) {
+            else
+                Both_Boder_None_Cross=0;
+            if (Both_Boder_None_Cross > 2 && pts_resample_left_count > 8 && pts_resample_right_count > 8) {
                 cross_type            = CROSS_NONE;
                 Both_Boder_None_Cross = 0;
                 cross_easy            = 0;
@@ -121,63 +125,61 @@ void RunCross()
 
 void cross_farline()
 {
-    int cross_width = 4;
-    int far_y1 = 0, far_y2 = 0;
-    int far_x1 = 0, far_x2 = 0;
-    bool white_found   = false;
+    //图像以x轴做镜像
+    for(uint16 i=0;i<MT9V03X_H;i++){
+        for (int j = 0; j < MT9V03X_W; j++) {
+            mt9v03x_image_mirror_copy[MT9V03X_H - 1 - i][j] = mt9v03x_image_copy[i][j];
+        }
+    }
+
+
+    int w1 = IMAGE_W / 2 - BEGINW_R, h1 = BEGINH_L-20;
     pts_far_left_count = sizeof(pts_far_left) / sizeof(pts_far_left[0]);
-
-    int w1 = IMAGE_W / 2 - BEGINW_R, h1 = BEGINH_L;
-    for (; w1 > cross_width * 2; w1--) {
-        if (GET_PIX_1C(mt9v03x_image_copy[0], h1, w1 - 1) < FIX_BINTHRESHOLD) {
-            far_x1 = w1 - cross_width;
+    for (; w1 > 0; w1--) {
+        if (GET_PIX_1C(mt9v03x_image_mirror_copy[0], h1, w1 - 1) < FIX_BINTHRESHOLD)
             break;
-        }
-    }
-    /*如果一行全为白色没写*/
-    if (far_x1 <= 4) {
-        far_x1 = 4;
     }
 
-    for (; h1 > 0; h1--) {
-        // 先黑后白，先找white
-        if (GET_PIX_1C(mt9v03x_image_copy[0], h1, far_x1) >= FIX_BINTHRESHOLD) { white_found = true; }
-        if (GET_PIX_1C(mt9v03x_image_copy[0], h1 - 1, far_x1) < FIX_BINTHRESHOLD && white_found) {
-            far_y1 = h1;
-            break;
-        }
+    if (GET_PIX_1C(mt9v03x_image_mirror_copy[0], h1, w1) >= FIX_BINTHRESHOLD){
+        SearchLineAdaptive_Left(mt9v03x_image_mirror_copy[0], SELFADAPT_KERNELSIZE, SELFADAPT_OFFSET, h1, w1, pts_far_left, &pts_far_left_count);
     }
-    if (GET_PIX_1C(mt9v03x_image_copy[0], far_y1, far_x1) >= FIX_BINTHRESHOLD) {
-        SearchLineAdaptive_Left(mt9v03x_image_copy[0], SELFADAPT_KERNELSIZE, SELFADAPT_OFFSET, far_y1, far_x1, pts_far_left, &pts_far_left_count);
-    } else
-        pts_far_left_count = 0;
+    else pts_far_left_count = 0;
 
-    int w2 = IMAGE_W / 2 + BEGINW_L, h2 = BEGINH_R;
-    white_found         = false;
+
+    int w2 = IMAGE_W / 2 + BEGINW_L, h2 = BEGINH_R-20;
     pts_far_right_count = sizeof(pts_far_right) / sizeof(pts_far_right[0]);
-    for (; w2 < IMAGE_W - cross_width * 2; w2++) {
-        if (GET_PIX_1C(mt9v03x_image_copy[0], h2, w2 + 1) < FIX_BINTHRESHOLD) {
-            far_x2 = w2 + cross_width;
+    for (; w2 < IMAGE_W - 1; w2++) {
+        if (GET_PIX_1C(mt9v03x_image_mirror_copy[0], h2, w2 + 1) < FIX_BINTHRESHOLD)
             break;
-        }
-    }
-    /*如果一行全为白色没写*/
-    if (far_x2 >= 136) {
-        far_x2 = 136;
     }
 
-    for (; h2 > 0; h2--) {
-        // 先黑后白，先找white
-        if (GET_PIX_1C(mt9v03x_image_copy[0], h2, far_x2) >= FIX_BINTHRESHOLD) { white_found = true; }
-        if (GET_PIX_1C(mt9v03x_image_copy[0], h2 - 1, far_x2) < FIX_BINTHRESHOLD && white_found) {
-            far_y2 = h2;
-            break;
+    if (GET_PIX_1C(mt9v03x_image_copy[0], h2, w2) >= FIX_BINTHRESHOLD){
+        SearchLineAdaptive_Right(mt9v03x_image_mirror_copy[0], SELFADAPT_KERNELSIZE, SELFADAPT_OFFSET, h2, w2, pts_far_right, &pts_far_right_count);
+    }
+    else pts_far_right_count = 0;
+
+    //将线镜像恢复，并反转起始点
+    for(int32_t i=0;i<pts_far_left_count;i++){
+        pts_far_left[i][0]=MT9V03X_H-pts_far_left[i][0];
+    }
+    for(int32_t i=0;i<pts_far_right_count;i++){
+        pts_far_right[i][0]=MT9V03X_H-pts_far_right[i][0];
+    }
+    int32_t temp_mirror_date;
+    for(int32_t i=0;i<(int32_t)(pts_far_left_count/2);i++){
+        for(uint8 j=0;j<2;j++){
+            temp_mirror_date = pts_far_left[i][j];
+            pts_far_left[i][j] = pts_far_left[pts_far_left_count-1-i][j];
+            pts_far_left[pts_far_left_count-1-i][j] = temp_mirror_date;
         }
     }
-    if (GET_PIX_1C(mt9v03x_image_copy[0], far_y2, far_x2) >= FIX_BINTHRESHOLD) {
-        SearchLineAdaptive_Right(mt9v03x_image_copy[0], SELFADAPT_KERNELSIZE, SELFADAPT_OFFSET, far_y2, far_x2, pts_far_right, &pts_far_right_count);
-    } else
-        pts_far_right_count = 0;
+    for(int32_t i=0;i<(int32_t)(pts_far_right_count/2);i++){
+        for(uint8 j=0;j<2;j++){
+            temp_mirror_date = pts_far_right[i][j];
+            pts_far_right[i][j] = pts_far_right[pts_far_right_count-1-i][j];
+            pts_far_right[pts_far_right_count-1-i][j] = temp_mirror_date;
+        }
+    }
 
     // 透视变换
     for (int i = 0; i < pts_far_left_count; i++) {

@@ -9,7 +9,7 @@
 
 void img_processing() {
 
-    //
+    //ÃÔ¹¬Ñ²Ïß
     int w1 = IMAGE_W / 2 - BEGINW_R, h1 = BEGINH_L;
     pts_left_count = sizeof(pts_left) / sizeof(pts_left[0]);
     for (; w1 > 0; w1--) {

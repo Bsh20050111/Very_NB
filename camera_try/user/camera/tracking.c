@@ -108,6 +108,7 @@ void tracking_line(void)
     } else if (pts_resample_right_count < 20 && pts_resample_left_count > pts_resample_right_count) {
         track_type = TRACK_LEFT;
     }
+
 }
 
 

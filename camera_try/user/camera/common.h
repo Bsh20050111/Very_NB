@@ -25,7 +25,7 @@
 #define PIXPERMETER_ACROSS    (50.0f)
 #define PIXPERMETER_ACROSS_BARRIER    (10.0f)
 #define RESAMPLEDIST          (0.02f)
-#define ANGLEDIST             (0.2f)
+#define ANGLEDIST             (0.1f)
 #define ANGLEDIST_barrier     (0.06f)
 #define ROADWIDTH             (0.40f)
 #define FRAMENONE             (1)

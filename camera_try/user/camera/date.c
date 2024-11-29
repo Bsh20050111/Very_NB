@@ -78,6 +78,7 @@ int far_angle_new_left_num;
 int far_angle_new_right_num;
 
 uint8_t mt9v03x_image_copy[MT9V03X_H][MT9V03X_W];
+uint8_t mt9v03x_image_mirror_copy[MT9V03X_H][MT9V03X_W];
 
 float angle_left[PT_MAXLEN];
 float angle_right[PT_MAXLEN];
@@ -130,7 +131,7 @@ float rptsn[PT_MAXLEN][2];
 int32_t rptsn_num;
 float aim_distance;
 float aim_judge_far=0.3f;
-float FIX_BINTHRESHOLD = 155;
+float FIX_BINTHRESHOLD = 113;
 
 track_type_e track_type = TRACK_RIGHT;
 

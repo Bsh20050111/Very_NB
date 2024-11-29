@@ -85,6 +85,7 @@ extern int far_angle_new_left_num;
 extern int far_angle_new_right_num;
 
 extern uint8_t mt9v03x_image_copy[MT9V03X_H][MT9V03X_W];
+extern uint8_t mt9v03x_image_mirror_copy[MT9V03X_H][MT9V03X_W];
 
 extern float angle_left[PT_MAXLEN];
 extern float angle_right[PT_MAXLEN];

@@ -25,7 +25,7 @@ int32_t ceshi = 0;
 
 void CheckCircle()
 {
-    // 非圆环模式下，单边L角点, 单边长直道
+    // 非圆环模式下，单边L角点, 单边长直道(暂时删去长直道，避免过弯后立刻接环岛无法识别)
     if (circle_type == CIRCLE_NONE && Lpt0_found && !Lpt1_found && is_straight1) {
         circle_type = CIRCLE_LEFT_BEGIN;
     }
@@ -44,7 +44,7 @@ void RunCircle(){
         if (pts_resample_left_count < 0.1 / RESAMPLEDIST) {
             Left_Border_None_Circle++;
         }
-        if (pts_resample_left_count > 0.5 / RESAMPLEDIST && Left_Border_None_Circle > FRAMENONE) {
+        if (pts_resample_left_count > 0.3 / RESAMPLEDIST && Left_Border_None_Circle > FRAMENONE) {
             Left_Border_Have_Circle++;
             if (Left_Border_Have_Circle > FRAMENONE) {
                 circle_type             = CIRCLE_LEFT_IN;
@@ -67,8 +67,8 @@ void RunCircle(){
         }
     } else if (circle_type == CIRCLE_LEFT_RUNNING) // 正常巡线，寻外圆右线
     {
-        // track_type = TRACK_RIGHT;
-        track_type = TRACK_LEFT; // 看看加一个如果丢线才切换
+         track_type = TRACK_RIGHT;
+        //track_type = TRACK_LEFT; // 看看加一个如果丢线才切换
         if (Lpt1_found) {
             pts_resample_right_count = mid_right_count = Lpt1_rpts1s_id;
         }
@@ -105,11 +105,10 @@ void RunCircle(){
         track_type = TRACK_LEFT;
 
         // 先丢右线后有线
-        if (pts_resample_right_count < 0.3 / RESAMPLEDIST) {
+        if (pts_resample_right_count < 0.1 / RESAMPLEDIST) {
             Right_Border_None_Circle++;
         }
-        if (pts_resample_right_count > 0.5 / RESAMPLEDIST &&
-            Right_Border_None_Circle > FRAMENONE) {
+        if (pts_resample_right_count > 0.3 / RESAMPLEDIST && Right_Border_None_Circle > FRAMENONE) {
             Right_Border_Have_Circle++;
             if (Right_Border_Have_Circle > FRAMENONE) {
                 circle_type              = CIRCLE_RIGHT_IN;
