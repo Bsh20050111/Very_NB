@@ -20,9 +20,9 @@ servo_element servo_fuck;
 
 void PID_LMotor_Init(motor_element *left_element)
 {
-    left_element->set_speed = 1000;
+    left_element->set_speed = 1500;
     left_element->max_speed = 2000;
-    left_element->min_speed = 0;
+    left_element->min_speed = -2000;
     left_element->kp=5;
     left_element->ki=0.05;
     left_element->out_speed = left_element->set_speed;
@@ -30,9 +30,9 @@ void PID_LMotor_Init(motor_element *left_element)
 
 void PID_RMotor_Init(motor_element *left_element)
 {
-    left_element->set_speed = 1000;
+    left_element->set_speed = 1500;
     left_element->max_speed = 2000;
-    left_element->min_speed = 0;
+    left_element->min_speed = -2000;
     left_element->kp=5;
     left_element->ki=0.1;
     left_element->out_speed = left_element->set_speed;
@@ -40,16 +40,16 @@ void PID_RMotor_Init(motor_element *left_element)
 
 void PID_DIF_Init(dif_element *dif_element)
 {
-    dif_element->dif_max =  1100;
-    dif_element->dif_min = -1100;
-    dif_element->kp=0.001;
-    dif_element->ki=0.05;
+    dif_element->dif_max =  1500;
+    dif_element->dif_min = -1500;
+    dif_element->kp=1.5;
+    dif_element->ki=0.15;
 }
 
 void PID_Servo_Init(servo_element *servo_element)
 {
     servo_element->kp = 0.5;
-    servo_element->kd = 0.3;
+    servo_element->kd = 0.4;
     servo_element->max_turn = 800;
     servo_element->min_turn = 680;
     servo_element->out_turn = 740;
