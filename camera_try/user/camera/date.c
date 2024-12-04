@@ -131,7 +131,7 @@ float rptsn[PT_MAXLEN][2];
 int32_t rptsn_num;
 float aim_distance;
 float aim_judge_far=0.3f;
-float FIX_BINTHRESHOLD = 113;
+float FIX_BINTHRESHOLD = 220;
 
 track_type_e track_type = TRACK_RIGHT;
 

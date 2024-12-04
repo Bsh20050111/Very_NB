@@ -47,34 +47,13 @@ void core1_main(void)
     interrupt_global_enable(0);             // 打开全局中断
     // 此处编写用户代码 例如外设初始化代码等
 
-    mt9v03x_init();//镜头初始化
+
 
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();                 // 等待所有核心初始化完毕
-    system_start();//启用定时器
+
     while (TRUE)
     {
-//        Atimer_start(1);
-        if (mt9v03x_finish_flag) {
-            memcpy(mt9v03x_image_copy[0], mt9v03x_image[0], (sizeof(mt9v03x_image_copy) / sizeof(uint8_t)));
-            mt9v03x_finish_flag = 0;
-            state_type = COMMON_STATE;
-            GetImgBin_Average(mt9v03x_image_copy[0], &FIX_BINTHRESHOLD);//平均值法
-            img_processing();
-            get_corners();
-            tracking_line();//选择巡线方式，巡左线or右线
-            ElementJudge();
-            aim_distance_select();
-            ElementRun();
-            MidLineTrack();
-//            printf("%d",(int16)pure_angle);
-//            if(abs((pure_angle)*1.2)<=75)
-//                pwm_set_duty(ATOM0_CH6_P02_6,740+(pure_angle)*1.2);
-//            else
-//                pwm_set_duty(ATOM0_CH6_P02_6,740+75);
-//
-//            pwm_set_duty(ATOM1_CH3_P21_5,800);
-//            pwm_set_duty(ATOM1_CH0_P21_2,800);
 
             //最后的输出中线为mid_track和mid_track_count
             //最后传出角度为tracking.c中的pure_angle
@@ -83,24 +62,6 @@ void core1_main(void)
              * 2、date.c中的angle_new_left/right，边线上各点的曲率
              */
 
-//            ips200_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 2*MT9V03X_W, 2*MT9V03X_H, FIX_BINTHRESHOLD);
-//
-//            for(uint16 i=0;i<pts_resample_left_count;i++){
-//                ips200_draw_point((uint16)pts_resample_left[i][1]*2, (uint16)pts_resample_left[i][0]*2, RGB565_RED);
-//            }
-//            for(uint16 i=0;i<pts_resample_right_count;i++){
-//                ips200_draw_point((uint16)pts_resample_right[i][1]*2, (uint16)pts_resample_right[i][0]*2, RGB565_BLUE);
-//            }
-//
-//            for(uint16 i=0;i<mid_track_count;i++){
-//                ips200_draw_point((uint16)mid_track[i][1]*2, (uint16)mid_track[i][0]*2, RGB565_BLACK);
-//            }
-//
-//            ips200_show_int(50,210,(int16)pure_angle,3);
-//            ips200_show_uint(0,210,(uint16)state_type,3);
-//            Atimer_stop(1);
-//            ips200_show_uint(100,210,Atimer_get(1),3);
-        }
 
     }
 }

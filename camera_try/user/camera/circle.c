@@ -44,7 +44,7 @@ void RunCircle(){
         if (pts_resample_left_count < 0.1 / RESAMPLEDIST) {
             Left_Border_None_Circle++;
         }
-        if (pts_resample_left_count > 0.3 / RESAMPLEDIST && Left_Border_None_Circle > FRAMENONE) {
+        if (pts_resample_left_count > 0.2 / RESAMPLEDIST && Left_Border_None_Circle > FRAMENONE) {
             Left_Border_Have_Circle++;
             if (Left_Border_Have_Circle > FRAMENONE) {
                 circle_type             = CIRCLE_LEFT_IN;
@@ -87,11 +87,11 @@ void RunCircle(){
     {
         track_type = TRACK_RIGHT;
 
-        if (pts_resample_left_count < 0.2 / RESAMPLEDIST) // 左线先丢后有
+        if (pts_resample_left_count < 0.1 / RESAMPLEDIST) // 左线先丢后有
         {
             Left_Border_None_Circle++;
         }
-        if (pts_resample_left_count > 0.6 / RESAMPLEDIST &&
+        if (pts_resample_left_count > 0.5 / RESAMPLEDIST &&
             Left_Border_None_Circle > FRAMENONE) {
             circle_type                 = CIRCLE_NONE;
             Left_Border_None_Circle     = 0;
@@ -108,7 +108,7 @@ void RunCircle(){
         if (pts_resample_right_count < 0.1 / RESAMPLEDIST) {
             Right_Border_None_Circle++;
         }
-        if (pts_resample_right_count > 0.3 / RESAMPLEDIST && Right_Border_None_Circle > FRAMENONE) {
+        if (pts_resample_right_count > 0.2 / RESAMPLEDIST && Right_Border_None_Circle > FRAMENONE) {
             Right_Border_Have_Circle++;
             if (Right_Border_Have_Circle > FRAMENONE) {
                 circle_type              = CIRCLE_RIGHT_IN;
@@ -152,11 +152,11 @@ void RunCircle(){
     {
         track_type = TRACK_LEFT;
 
-        if (pts_resample_right_count < 0.2 / RESAMPLEDIST) // 左线先丢后有
+        if (pts_resample_right_count < 0.1 / RESAMPLEDIST) // 左线先丢后有
         {
             Right_Border_None_Circle++;
         }
-        if (pts_resample_right_count > (0.7 / RESAMPLEDIST) && Right_Border_None_Circle > FRAMENONE) {
+        if (pts_resample_right_count > (0.5 / RESAMPLEDIST) && Right_Border_None_Circle > FRAMENONE) {
             circle_type                = CIRCLE_NONE;
             Right_Border_None_Circle   = 0;
             Right_Border_Have_Circle   = 0;

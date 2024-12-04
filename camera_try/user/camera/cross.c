@@ -61,8 +61,6 @@ void RunCross()
             if (pts_resample_left_count < 5 && pts_resample_right_count < 5) {
                 Both_Boder_None_Cross++;
             }
-            else
-                Both_Boder_None_Cross=0;
             if (Both_Boder_None_Cross > 2 && pts_resample_left_count > 8 && pts_resample_right_count > 8) {
                 cross_type            = CROSS_NONE;
                 Both_Boder_None_Cross = 0;
@@ -91,20 +89,17 @@ void RunCross()
             }
 
             // 近角点过少，进入远线控制
-            if ((Xfound && (Lpt0_rpts0s_id < 0.2 / RESAMPLEDIST && Lpt1_rpts1s_id < 0.2 / RESAMPLEDIST)) || (pts_resample_left_count < 20 && pts_resample_right_count < 20)) {
+            if ((((Lpt0_found || Lpt1_found)|| Xfound) && (Lpt0_rpts0s_id < 0.2 / RESAMPLEDIST && Lpt1_rpts1s_id < 0.2 / RESAMPLEDIST)) || (pts_resample_left_count < 20 && pts_resample_right_count < 20)) {
                 cross_type = CROSS_IN;
             }
         }
-        // 远线控制进十字,begin_y渐变靠近防丢线
         if (cross_type == CROSS_IN) {
-            // 寻远线,算法与近线相同
+
             cross_farline();
 
             if (pts_resample_left_count < 5 && pts_resample_right_count < 5) {
                 Both_Boder_None_Cross++;
             }
-            else
-                Both_Boder_None_Cross=0;
             if (Both_Boder_None_Cross > 2 && pts_resample_left_count > 8 && pts_resample_right_count > 8) {
                 cross_type            = CROSS_NONE;
                 Both_Boder_None_Cross = 0;
@@ -133,7 +128,7 @@ void cross_farline()
     }
 
 
-    int w1 = IMAGE_W / 2 - BEGINW_R, h1 = BEGINH_L-20;
+    int w1 = IMAGE_W / 2 - BEGINW_R/2, h1 = BEGINH_L-20;
     pts_far_left_count = sizeof(pts_far_left) / sizeof(pts_far_left[0]);
     for (; w1 > 0; w1--) {
         if (GET_PIX_1C(mt9v03x_image_mirror_copy[0], h1, w1 - 1) < FIX_BINTHRESHOLD)
@@ -146,7 +141,7 @@ void cross_farline()
     else pts_far_left_count = 0;
 
 
-    int w2 = IMAGE_W / 2 + BEGINW_L, h2 = BEGINH_R-20;
+    int w2 = IMAGE_W / 2 + BEGINW_L/2, h2 = BEGINH_R-20;
     pts_far_right_count = sizeof(pts_far_right) / sizeof(pts_far_right[0]);
     for (; w2 < IMAGE_W - 1; w2++) {
         if (GET_PIX_1C(mt9v03x_image_mirror_copy[0], h2, w2 + 1) < FIX_BINTHRESHOLD)
