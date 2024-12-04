@@ -13,7 +13,7 @@
 
 extern int16 encoder_data_1;
 extern int16 encoder_data_3;
-
+extern float Voltage;
 
 void system_init(void);
 

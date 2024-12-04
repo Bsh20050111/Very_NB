@@ -11,6 +11,7 @@
 
 int16 encoder_data_1 = 0;
 int16 encoder_data_3 = 0;
+float Voltage = 0;
 
 extern KalmanFilter ENCODER01_ERROR;
 extern KalmanFilter ENCODER03_ERROR;
@@ -20,7 +21,7 @@ void system_init(void)
 {
     ips200_init(IPS200_TYPE_SPI);
 
-
+    adc_init(ADC0_CH8_A8,ADC_12BIT);
 
     kalman_init(&ENCODER01_ERROR,0.0f,1.0f,0.1f,1.0f);
     kalman_init(&ENCODER03_ERROR,0.0f,1.0f,0.1f,1.0f);
