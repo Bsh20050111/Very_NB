@@ -54,7 +54,7 @@ uint8 y1_boundary[MT9V03X_W], y2_boundary[MT9V03X_W], y3_boundary[MT9V03X_W];
 
 // 图像备份数组，在发送前将图像备份再进行发送，这样可以避免图像出现撕裂的问题
 uint8 image_copy[MT9V03X_H][MT9V03X_W];
-
+int16 key_slow = 0;
 
 int core0_main(void)
 {
@@ -62,9 +62,12 @@ int core0_main(void)
     debug_init();                   // 初始化默认调试串口
     // 此处编写用户代码 例如外设初始化代码等
 
+
     mt9v03x_init();//镜头初始化
     encoder_quad_init(ENCODER_1, ENCODER_1_A, ENCODER_1_B);          // 初始化编码器模块与引脚 正交解码编码器模式
     encoder_dir_init (ENCODER_3, ENCODER_3_A, ENCODER_3_B);          // 初始化编码器模块与引脚 带方向增量编码器模式
+
+
 
     pwm_init(ATOM1_CH3_P21_5,17000,1000);
     pwm_init(ATOM1_CH0_P21_2,17000,1000);
@@ -75,6 +78,7 @@ int core0_main(void)
     PID_RMotor_Init(&right_wheel);
     PID_Servo_Init(&servo_fuck);
     PID_DIF_Init(&dif_wheel);
+    Flash_Pid_read();
     system_start();//启用定时器
 
 
@@ -84,6 +88,7 @@ int core0_main(void)
     cpu_wait_event_ready();         // 等待所有核心初始化完毕
     while (TRUE)
     {
+        Atimer_start(1);
         if (mt9v03x_finish_flag) {
             memcpy(mt9v03x_image_copy[0], mt9v03x_image[0], (sizeof(mt9v03x_image_copy) / sizeof(uint8_t)));
             mt9v03x_finish_flag = 0;
@@ -99,14 +104,13 @@ int core0_main(void)
         }
         // 此处编写需要循环执行的代码
 
-        Key_Proc(&Key_Val,&Key_Old,&Key_Down,&Key_Up);
-        menu_disp(menu_index,disp_index);
-        menu_control(&menu_index,&disp_index,Key_Down,&left_wheel,&right_wheel,&dif_wheel,&servo_fuck);
+
+        key_menu_process();
+
+
+        printf("%f,%f\n",left_wheel.now_speed,right_wheel.now_speed);
         // 此处编写需要循环执行的代码
 //        printf("%f\n",(Voltage-3875)/2);
-        ips200_show_float(5,155, left_wheel.out_speed - (dif_wheel.dif_out/2),4,2);
-        ips200_show_float(5,175,right_wheel.out_speed + (dif_wheel.dif_out/2),4,2);
-        ips200_show_float(5,195,dif_wheel.dif_out,4,2);
 
     }
 }
@@ -117,13 +121,11 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, 0, CCU6_0_CH1_ISR_PRIORITY)
     pit_clear_flag(CCU60_CH1);
 
 
+
     if(++key_slow == 500)
     {
         key_slow = 0;
         Voltage = adc_mean_filter_convert(ADC0_CH8_A8,50);
-        ips200_show_string(5,215,"Voltage:");
-        ips200_show_float(75,215,(Voltage-3875)/2.2,4,2);
-        ips200_show_string(110,215,"%");
     }
 
     float data_1,data_3;

@@ -9,7 +9,6 @@
 #include "Smart_headfile.h"
 
 int16 Key_Val,Key_Down,Key_Up,Key_Old;
-int16 key_slow = 0;
 
 unsigned char Key_Read(void)
 {

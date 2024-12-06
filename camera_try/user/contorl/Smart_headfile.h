@@ -79,10 +79,13 @@ typedef struct {
     float K;  // 卡尔曼增益
 } KalmanFilter;// 定义卡尔曼滤波器结构
 
+extern float set_speed;
 
-
-
-
+extern motor_element right_wheel;
+extern motor_element left_wheel;
+extern dif_element   dif_wheel;
+extern servo_element servo_fuck;
+extern float Voltage;
 
 
 

@@ -11,7 +11,7 @@
 
 int16 encoder_data_1 = 0;
 int16 encoder_data_3 = 0;
-float Voltage = 0;
+float Voltage = 4095;
 
 extern KalmanFilter ENCODER01_ERROR;
 extern KalmanFilter ENCODER03_ERROR;

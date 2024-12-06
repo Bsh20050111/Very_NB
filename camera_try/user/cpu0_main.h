@@ -57,12 +57,10 @@
 #include "tracking.h"
 #include "state.h"
 #include "date.h"
-#include "Smart_key.h"
 #include "Smart_motor.h"
-#include "Smart_ips.h"
 #include "Smart_Init.h"
-
-
+#include "Smart_ips.h"
+#include "flash.h"
 
 /******************************************************************************/
 /*-----------------------------------Macros-----------------------------------*/
